@@ -86,7 +86,12 @@ app.MapDelete("/api/animals/{id:int}", (int id) =>
 
 app.MapGet("/api/visits/{id:int}", (int id) =>
     {
-        var visits = _visits.Find(a => a.IdAnimal == id);
+        var visits = new List<Visit>();
+        foreach (var visit in _visits)
+        {
+            if(visit.IdAnimal == id)
+                visits.Add(visit);
+        }
         return visits == null ? Results.NotFound($"Visits for animal with id {id} were not found") : Results.Ok(visits);
     })
     .WithName("GetVisitsForAnimal")
