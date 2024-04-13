@@ -18,7 +18,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
- var _animals = new List<Animal>();
+var _animals = new List<Animal>();
+var _visits = new List<Visit>();
 
 app.MapGet("/api/animals", () => Results.Ok(_animals))
     .WithName("GetAnimals")
@@ -65,6 +66,22 @@ app.MapDelete("/api/animals/{id:int}", (int id) =>
         return Results.NoContent();
     })
     .WithName("DeleteAnimal")
+    .WithOpenApi();
+
+app.MapGet("/api/visits/{id:int}", (int id) =>
+    {
+        var visits = _visits.Find(a => a.Animal.IdAnimal == id);
+        return visits == null ? Results.NotFound($"Visits for animal with id {id} were not found") : Results.Ok(visits);
+    })
+    .WithName("GetAnimal")
+    .WithOpenApi();
+
+app.MapPost("/api/visits", (Visit visit) =>
+    {
+        _visits.Add(visit);
+        return Results.StatusCode(StatusCodes.Status201Created);
+    })
+    .WithName("AddAnimal")
     .WithOpenApi();
 
 app.Run();
