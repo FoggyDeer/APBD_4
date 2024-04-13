@@ -92,7 +92,7 @@ app.MapGet("/api/visits/{id:int}", (int id) =>
             if(visit.IdAnimal == id)
                 visits.Add(visit);
         }
-        return visits == null ? Results.NotFound($"Visits for animal with id {id} were not found") : Results.Ok(visits);
+        return visits.Count == 0 ? Results.NotFound($"Visits for animal with id {id} were not found") : Results.Ok(visits);
     })
     .WithName("GetVisitsForAnimal")
     .WithOpenApi();
